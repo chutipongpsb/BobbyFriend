@@ -4,12 +4,18 @@ package com.p.chutipong.bobbyfriend;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -53,7 +59,32 @@ public class MainFragment extends Fragment {
 
                 } else {
 
-                }
+                    try {
+
+                        GetUserWhereUserThread getUserWhereUserThread = new GetUserWhereUserThread(getActivity());
+                        getUserWhereUserThread.execute(user);
+                        String json = getUserWhereUserThread.get();
+                        Log.d("24FebV1", "json ==>" + json);
+
+                        if (json.equals("null")) {
+                        } else {
+                            JSONArray jsonArray = new JSONArray(json);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                            if (password.equals(jsonObject.getString("password"))) {
+                                Toast.makeText(getActivity(), "Welcome" + jsonObject.getString("Name"), Toast.LENGTH_SHORT).show();
+                            } else {
+                                myAlert.normalDialog("Password", "Password False");
+
+                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } //if
             }
         });
 
